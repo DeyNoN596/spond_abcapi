@@ -38,10 +38,18 @@ async def create_event(payload: PrestationPayload):
     custom = payload.champs_custom
 
     # Formatage de la description
-    lines = ["FICHE DE PRESTATION", "==================="]
+    lines = ["DETAILS DE PRESTATION", "==================="]
     for key, val in custom.items():
         if val:
             lines.append(f"{key} : {val}")
+
+    tasks_list = []
+    soj = custom.get("Sous-officier de jour")
+    if soj:
+        tasks_list.append({
+            "name": f"Sous-officier de jour : {soj}",
+            "type": "TASK"
+        })
 
     start_iso = format_iso_france(meta['date_depart'], meta['heure_depart'])
     end_iso = format_iso_france(meta['date_retour'], meta['heure_retour'])
@@ -57,7 +65,8 @@ async def create_event(payload: PrestationPayload):
         "group": {"id": SPOND_GROUP_ID},
         "recipients": {"group": {"id": SPOND_GROUP_ID}},
         "type": "EVENT",
-        "autoAccept": True
+        "autoAccept": True,
+        "tasks": tasks_list
     }
 
     spond_client = spond.Spond(username=SPOND_USERNAME, password=SPOND_PASSWORD)
