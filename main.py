@@ -36,8 +36,8 @@ async def create_event(payload: PrestationPayload):
         if val:
             lines.append(f"{key} : {val}")
 
-    start_iso = f"{meta['date_depart']}T{meta['heure_depart']}:00.000Z"
-    end_iso = f"{meta['date_retour']}T{meta['heure_retour']}:00.000Z"
+    start_iso = f"{meta['date_depart']}T{meta['heure_depart']}:00.000"
+    end_iso = f"{meta['date_retour']}T{meta['heure_retour']}:00.000"
     titre = f"🎺 {meta.get('titre', 'Prestation')} – {meta.get('ville', '')}"
 
     spond_body = {
