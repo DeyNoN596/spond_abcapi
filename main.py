@@ -4,6 +4,8 @@ from fastapi import FastAPI, HTTPException, Security, Depends
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 from spond import spond
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 app = FastAPI(title="Spond API Gateway")
 
@@ -19,6 +21,11 @@ SPOND_GROUP_ID = os.getenv("SPOND_GROUP", "5147B24128CF42D4A2B6F8832074B0D5")
 class PrestationPayload(BaseModel):
     metadonnees: dict
     champs_custom: dict
+
+def format_iso_france(date_str: str, heure_str: str) -> str:
+    dt_naive = datetime.strptime(f"{date_str} {heure_str}", "%Y-%m-%d %H:%M")
+    dt_france = dt_naive.replace(tzinfo=ZoneInfo("Europe/Paris"))
+    return dt_france.isoformat()
 
 async def verify_api_key(api_key: str = Depends(API_KEY_HEADER)):
     if api_key != EXPECTED_API_KEY:
@@ -36,8 +43,9 @@ async def create_event(payload: PrestationPayload):
         if val:
             lines.append(f"{key} : {val}")
 
-    start_iso = f"{meta['date_depart']}T{meta['heure_depart']}:00.000"
-    end_iso = f"{meta['date_retour']}T{meta['heure_retour']}:00.000"
+    start_iso = format_iso_france(meta['date_depart'], meta['heure_depart'])
+    end_iso = format_iso_france(meta['date_retour'], meta['heure_retour'])
+    
     titre = f"🎺 {meta.get('titre', 'Prestation')} – {meta.get('ville', '')}"
 
     spond_body = {
