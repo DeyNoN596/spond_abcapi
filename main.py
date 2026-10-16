@@ -11,7 +11,7 @@ app = FastAPI(title="Spond API Gateway")
 API_KEY_HEADER = APIKeyHeader(name="X-API-Key", auto_error=True)
 
 # Variables d'environnement récupérées depuis la plateforme d'hébergement
-EXPECTED_API_KEY = os.getenv("API_SECRET_KEY", "VotreCleSecrete123!")
+EXPECTED_API_KEY = os.getenv("API_SECRET_KEY")
 SPOND_USERNAME = os.getenv("SPOND_USER")
 SPOND_PASSWORD = os.getenv("SPOND_PASS")
 SPOND_GROUP_ID = os.getenv("SPOND_GROUP", "5147B24128CF42D4A2B6F8832074B0D5")
