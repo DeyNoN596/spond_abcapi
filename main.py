@@ -56,7 +56,8 @@ async def create_event(payload: PrestationPayload):
         "endTimestamp": end_iso,
         "group": {"id": SPOND_GROUP_ID},
         "recipients": {"group": {"id": SPOND_GROUP_ID}},
-        "type": "EVENT"
+        "type": "EVENT",
+        "autoAccept": True
     }
 
     spond_client = spond.Spond(username=SPOND_USERNAME, password=SPOND_PASSWORD)
