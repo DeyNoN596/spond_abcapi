@@ -43,18 +43,6 @@ async def create_event(payload: PrestationPayload):
         if val:
             lines.append(f"{key} : {val}")
 
-    soj = custom.get("Sous-officier de jour")
-    tasks_payload = {}
-    if soj:
-        tasks_payload = {
-            "buttonTasks": [
-                {
-                    "name": f"Sous-officier de jour : {soj}",
-                    "type": "TASK"
-                }
-            ]
-        }
-    
     start_iso = format_iso_france(meta['date_depart'], meta['heure_depart'])
     end_iso = format_iso_france(meta['date_retour'], meta['heure_retour'])
     
@@ -72,8 +60,6 @@ async def create_event(payload: PrestationPayload):
         "autoAccept": True
     }
 
-    if tasks_payload:
-        spond_body["tasks"] = tasks_payload
 
     spond_client = spond.Spond(username=SPOND_USERNAME, password=SPOND_PASSWORD)
     try:
