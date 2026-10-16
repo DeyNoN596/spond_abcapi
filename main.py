@@ -64,25 +64,12 @@ async def create_event(payload: PrestationPayload):
 
 
         async with session.post(f"{base_url}/sponds", json=spond_body, headers=headers) as resp:
-            resp_text = await resp.text()
-            print(f"🔍 [DEBUG] Code HTTP Spond: {resp.status}")
-            print(f"🔍 [DEBUG] Réponse complète Spond: {resp_text}")
-
             if resp.status in (200, 201):
                 res = await resp.json()
-                event_id = res.get("id")
-                print(f"✅ Événement créé avec succès. ID Spond : {event_id}")
-                return {"status": "success", "spond_id": event_id, "raw_response": res}
+                return {"status": "success", "event_id": res.get("id")}
             else:
-                raise HTTPException(status_code=resp.status, detail=f"Spond Error: {resp_text}")
-
-        #async with session.post(f"{base_url}/sponds", json=spond_body, headers=headers) as resp:
-        #    if resp.status in (200, 201):
-        #        res = await resp.json()
-        #        return {"status": "success", "event_id": res.get("id")}
-        #    else:
-        #        err_msg = await resp.text()
-        #        raise HTTPException(status_code=resp.status, detail=f"Spond Error: {err_msg}")
+                err_msg = await resp.text()
+                raise HTTPException(status_code=resp.status, detail=f"Spond Error: {err_msg}")
     finally:
         session = getattr(spond_client, "clientsession", getattr(spond_client, "_session", None))
         if session and not session.closed:
