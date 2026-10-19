@@ -67,7 +67,7 @@ async def create_google_event(payload: PrestationPayload):
 
     if custom.get("Details"):
         lines.append("\nINFORMATIONS COMPLÉMENTAIRES")
-        lines.append("----------------------------")
+        lines.append("===================")
         lines.append(custom["Details"])
 
     # Conversion des dates ISO (zone Europe/Paris)
@@ -111,10 +111,15 @@ async def create_spond_event(payload: PrestationPayload):
     custom = payload.champs_custom
 
     # Formatage de la description
-    lines = ["DETAILS DE PRESTATION", "==================="]
+    lines = ["FICHE DE PRESTATION", "==================="]
     for key, val in custom.items():
-        if val:
+        if val and key != "Details":
             lines.append(f"{key} : {val}")
+
+    if custom.get("Details"):
+        lines.append("\nINFORMATIONS COMPLÉMENTAIRES")
+        lines.append("===================")
+        lines.append(custom["Details"])
 
     start_iso = format_iso_france(meta['date_depart'], meta['heure_depart'])
     end_iso = format_iso_france(meta['date_retour'], meta['heure_retour'])
